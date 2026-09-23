@@ -1,4 +1,4 @@
-package edu.umg.programacion2.proyecto.ui;
+package edu.umg.programacion2.proyecto;
 
 import java.awt.EventQueue;
 
