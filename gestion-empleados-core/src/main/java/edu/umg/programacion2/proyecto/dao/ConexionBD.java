@@ -11,7 +11,7 @@ public class ConexionBD {
             "jdbc:mysql://localhost:3306/empleados_db"
             + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String USUARIO = "root";
-    private static final String CLAVE = "tu_clave";
+    private static final String CLAVE = "123A";
 
     private ConexionBD() {
      
