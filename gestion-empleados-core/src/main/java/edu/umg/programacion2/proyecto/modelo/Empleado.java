@@ -4,8 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Empleado {
-
+  
     private int id;
+    private String correo;
     private String nombre;
     private String departamento;
     private BigDecimal salario;
@@ -16,8 +17,9 @@ public class Empleado {
     }
 
     // Para registrar uno nuevo: el id lo asigna la base de datos
-    public Empleado(String nombre, String departamento, BigDecimal salario,
+    public Empleado(String correo, String nombre, String departamento, BigDecimal salario,
                     LocalDate fechaContratacion, boolean activo) {
+        this.correo = correo;
         this.nombre = nombre;
         this.departamento = departamento;
         this.salario = salario;
@@ -25,16 +27,19 @@ public class Empleado {
         this.activo = activo;
     }
 
-    // Para empleados leídos de la base de datos
-    public Empleado(int id, String nombre, String departamento, BigDecimal salario,
+    // Para empleados leídos de la base de datos (Se corrigió la coma extra en String, nombre)
+    public Empleado(int id, String correo, String nombre, String departamento, BigDecimal salario,
                     LocalDate fechaContratacion, boolean activo) {
-        this(nombre, departamento, salario, fechaContratacion, activo);
+        this(correo, nombre, departamento, salario, fechaContratacion, activo);
         this.id = id;
     }
 
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
+    
+    public String getCorreo() { return correo; }
+    public void setCorreo(String correo) { this.correo = correo; }
+    
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
@@ -52,7 +57,8 @@ public class Empleado {
 
     @Override
     public String toString() {
-        return "[" + id + "] " + nombre + " | " + departamento + " | Q" + salario
+        // Se corrigió la concatenación de las variables en el texto
+        return "[" + id + "] " + correo + " - " + nombre + " | " + departamento + " | Q" + salario
                 + " | " + (activo ? "Activo" : "Inactivo");
     }
 }

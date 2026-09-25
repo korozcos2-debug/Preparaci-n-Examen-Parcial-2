@@ -14,16 +14,17 @@ import edu.umg.programacion2.proyecto.modelo.Empleado;
 public class EmpleadoDAO {
 
     public Empleado crear(Empleado e) throws SQLException {
-        String sql = "INSERT INTO empleados (nombre, departamento, salario, fecha_contratacion, activo) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO empleados (email, nombre, departamento, salario, fecha_contratacion, activo) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            ps.setString(1, e.getNombre());
-            ps.setString(2, e.getDepartamento());
-            ps.setBigDecimal(3, e.getSalario());
-            ps.setDate(4, java.sql.Date.valueOf(e.getFechaContratacion()));
-            ps.setBoolean(5, e.isActivo());
+            ps.setString(1, e.getCorreo());
+            ps.setString(2, e.getNombre());
+            ps.setString(3, e.getDepartamento());
+            ps.setBigDecimal(4, e.getSalario());
+            ps.setDate(5, java.sql.Date.valueOf(e.getFechaContratacion()));
+            ps.setBoolean(6, e.isActivo());
             
             int filasAfectadas = ps.executeUpdate();
             
@@ -40,7 +41,7 @@ public class EmpleadoDAO {
 
     public List<Empleado> listarTodos() throws SQLException {
         List<Empleado> lista = new ArrayList<>();
-        String sql = "SELECT id, nombre, departamento, salario, fecha_contratacion, activo FROM empleados";
+        String sql = "SELECT id, email, nombre, departamento, salario, fecha_contratacion, activo FROM empleados";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql);
@@ -54,7 +55,7 @@ public class EmpleadoDAO {
     }
 
     public Optional<Empleado> buscarPorId(int id) throws SQLException {
-        String sql = "SELECT id, nombre, departamento, salario, fecha_contratacion, activo FROM empleados WHERE id = ?";
+        String sql = "SELECT id, email, nombre, departamento, salario, fecha_contratacion, activo FROM empleados WHERE id = ?";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -70,18 +71,19 @@ public class EmpleadoDAO {
     }
 
     public boolean actualizar(Empleado e) throws SQLException {
-        String sql = "UPDATE empleados SET nombre = ?, departamento = ?, salario = ?, fecha_contratacion = ?, activo = ? WHERE id = ?";
+        String sql = "UPDATE empleados SET email = ?, nombre = ?, departamento = ?, salario = ?, fecha_contratacion = ?, activo = ? WHERE id = ?";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
             
-            ps.setString(1, e.getNombre());
-            ps.setString(2, e.getDepartamento());
-            ps.setBigDecimal(3, e.getSalario());
-            ps.setDate(4, java.sql.Date.valueOf(e.getFechaContratacion()));
-            ps.setBoolean(5, e.isActivo());
-            ps.setInt(6, e.getId());
-            
+            ps.setString(1, e.getCorreo());
+            ps.setString(2, e.getNombre());
+            ps.setString(3, e.getDepartamento());
+            ps.setBigDecimal(4, e.getSalario());
+            ps.setDate(5, java.sql.Date.valueOf(e.getFechaContratacion()));
+            ps.setBoolean(6, e.isActivo());
+            ps.setInt(7, e.getId());
+                    
             return ps.executeUpdate() > 0;
         }
     }
@@ -99,7 +101,9 @@ public class EmpleadoDAO {
 
     private Empleado mapearEmpleado(ResultSet rs) throws SQLException {
         Empleado e = new Empleado();
+        
         e.setId(rs.getInt("id"));
+        e.setCorreo(rs.getString("email"));
         e.setNombre(rs.getString("nombre"));
         e.setDepartamento(rs.getString("departamento"));
         e.setSalario(rs.getBigDecimal("salario"));
