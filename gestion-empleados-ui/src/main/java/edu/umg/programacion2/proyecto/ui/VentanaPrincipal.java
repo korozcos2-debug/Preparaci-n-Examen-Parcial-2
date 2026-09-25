@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class VentanaPrincipal extends JFrame {
     public VentanaPrincipal() {
         setTitle("Gestión de empleados");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 900, 580);
+        setBounds(100, 100, 950, 580);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -60,7 +61,7 @@ public class VentanaPrincipal extends JFrame {
 
         // ---- Tabla (centro) ----
         modelo = new DefaultTableModel(
-                new Object[] { "ID", "Correo", "Nombre", "Departamento", "Salario", "Contratación", "Activo" }, 0) {
+                new Object[] { "ID", "Correo", "Nombre", "Departamento", "Salario", "Contratación", "Antigüedad", "Activo" }, 0) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -224,8 +225,34 @@ public class VentanaPrincipal extends JFrame {
                     e.getDepartamento(),
                     "Q" + e.getSalario().toPlainString(),
                     e.getFechaContratacion(),
+                    calcularAntiguedad(e.getFechaContratacion()),
                     e.isActivo() ? "Activo" : "Inactivo" });
         }
+    }
+
+    /**
+     * Calcula la antigüedad del empleado a partir de su fecha de contratación.
+     * Es un dato derivado: se calcula en Java y NO se guarda en la base de datos.
+     */
+    private String calcularAntiguedad(LocalDate fechaContratacion) {
+        Period periodo = Period.between(fechaContratacion, LocalDate.now());
+        int anios = periodo.getYears();
+        int meses = periodo.getMonths();
+
+        if (anios == 0 && meses == 0) {
+            return "Menos de 1 mes";
+        }
+        StringBuilder texto = new StringBuilder();
+        if (anios > 0) {
+            texto.append(anios).append(anios == 1 ? " año" : " años");
+        }
+        if (meses > 0) {
+            if (texto.length() > 0) {
+                texto.append(", ");
+            }
+            texto.append(meses).append(meses == 1 ? " mes" : " meses");
+        }
+        return texto.toString();
     }
 
     private void cargarSeleccionEnFormulario() {
