@@ -14,7 +14,7 @@ import edu.umg.programacion2.proyecto.modelo.Empleado;
 public class EmpleadoDAO {
 
     public Empleado crear(Empleado e) throws SQLException {
-        String sql = "INSERT INTO empleados (email, nombre, departamento, salario, fecha_contratacion, activo) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO empleados (correo, nombre, departamento, salario, fecha_contratacion, activo) VALUES (?, ?, ?, ?, ?, ?)";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -41,7 +41,7 @@ public class EmpleadoDAO {
 
     public List<Empleado> listarTodos() throws SQLException {
         List<Empleado> lista = new ArrayList<>();
-        String sql = "SELECT id, email, nombre, departamento, salario, fecha_contratacion, activo FROM empleados";
+        String sql = "SELECT id, correo, nombre, departamento, salario, fecha_contratacion, activo FROM empleados";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql);
@@ -55,7 +55,7 @@ public class EmpleadoDAO {
     }
 
     public Optional<Empleado> buscarPorId(int id) throws SQLException {
-        String sql = "SELECT id, email, nombre, departamento, salario, fecha_contratacion, activo FROM empleados WHERE id = ?";
+        String sql = "SELECT id, correo, nombre, departamento, salario, fecha_contratacion, activo FROM empleados WHERE id = ?";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -71,7 +71,7 @@ public class EmpleadoDAO {
     }
 
     public boolean actualizar(Empleado e) throws SQLException {
-        String sql = "UPDATE empleados SET email = ?, nombre = ?, departamento = ?, salario = ?, fecha_contratacion = ?, activo = ? WHERE id = ?";
+        String sql = "UPDATE empleados SET correo = ?, nombre = ?, departamento = ?, salario = ?, fecha_contratacion = ?, activo = ? WHERE id = ?";
         
         try (Connection conexion = ConexionBD.obtenerConexion();
              PreparedStatement ps = conexion.prepareStatement(sql)) {
@@ -103,7 +103,7 @@ public class EmpleadoDAO {
         Empleado e = new Empleado();
         
         e.setId(rs.getInt("id"));
-        e.setCorreo(rs.getString("email"));
+        e.setCorreo(rs.getString("correo"));
         e.setNombre(rs.getString("nombre"));
         e.setDepartamento(rs.getString("departamento"));
         e.setSalario(rs.getBigDecimal("salario"));
