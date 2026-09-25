@@ -37,6 +37,7 @@ public class VentanaPrincipal extends JFrame {
     private JPanel contentPane;
     private JTable tabla;
     private DefaultTableModel modelo;
+    private JTextField txtCorreo;
     private JTextField txtNombre;
     private JTextField txtDepartamento;
     private JTextField txtSalario;
@@ -50,7 +51,7 @@ public class VentanaPrincipal extends JFrame {
     public VentanaPrincipal() {
         setTitle("Gestión de empleados");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 850, 560);
+        setBounds(100, 100, 900, 580);
 
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -59,7 +60,7 @@ public class VentanaPrincipal extends JFrame {
 
         // ---- Tabla (centro) ----
         modelo = new DefaultTableModel(
-                new Object[] { "ID", "Nombre", "Departamento", "Salario", "Contratación", "Activo" }, 0) {
+                new Object[] { "ID", "Correo", "Nombre", "Departamento", "Salario", "Contratación", "Activo" }, 0) {
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -83,8 +84,12 @@ public class VentanaPrincipal extends JFrame {
         contentPane.add(panelSur, BorderLayout.SOUTH);
 
         JPanel panelForm = new JPanel();
-        panelForm.setLayout(new GridLayout(5, 2, 8, 8));
+        panelForm.setLayout(new GridLayout(6, 2, 8, 8));
         panelSur.add(panelForm, BorderLayout.CENTER);
+
+        panelForm.add(new JLabel("Correo electrónico:"));
+        txtCorreo = new JTextField();
+        panelForm.add(txtCorreo);
 
         panelForm.add(new JLabel("Nombre completo:"));
         txtNombre = new JTextField();
@@ -126,7 +131,10 @@ public class VentanaPrincipal extends JFrame {
         btnLimpiar = new JButton("Limpiar");
         btnLimpiar.addActionListener(e -> limpiarFormulario());
         panelBotones.add(btnLimpiar);
+    }
 
+    /** Se llama al abrir la ventana en tiempo de ejecución (no en el diseñador). */
+    public void iniciar() {
         limpiarFormulario();
         cargarTabla();
     }
@@ -211,6 +219,7 @@ public class VentanaPrincipal extends JFrame {
         for (Empleado e : empleados) {
             modelo.addRow(new Object[] {
                     e.getId(),
+                    e.getCorreo(),
                     e.getNombre(),
                     e.getDepartamento(),
                     "Q" + e.getSalario().toPlainString(),
@@ -226,6 +235,7 @@ public class VentanaPrincipal extends JFrame {
         }
         Empleado e = empleados.get(fila);
         idSeleccionado = e.getId();
+        txtCorreo.setText(e.getCorreo());
         txtNombre.setText(e.getNombre());
         txtDepartamento.setText(e.getDepartamento());
         txtSalario.setText(e.getSalario().toPlainString());
@@ -245,8 +255,8 @@ public class VentanaPrincipal extends JFrame {
             mostrarAviso("Fecha inválida. Use el formato AAAA-MM-DD, por ejemplo 2024-03-15");
             return null;
         }
-        Empleado e = new Empleado(txtNombre.getText().trim(), txtDepartamento.getText().trim(),
-                salario, fecha, chkActivo.isSelected());
+        Empleado e = new Empleado(txtCorreo.getText().trim(), txtNombre.getText().trim(),
+                txtDepartamento.getText().trim(), salario, fecha, chkActivo.isSelected());
 
         // Las reglas de negocio se validan aquí para avisar antes de tocar la BD.
         String error = ValidadorEmpleado.validar(e);
@@ -260,12 +270,13 @@ public class VentanaPrincipal extends JFrame {
     private void limpiarFormulario() {
         tabla.clearSelection();
         idSeleccionado = 0;
+        txtCorreo.setText("");
         txtNombre.setText("");
         txtDepartamento.setText("");
         txtSalario.setText("");
         txtFecha.setText(LocalDate.now().toString());
         chkActivo.setSelected(true);
-        txtNombre.requestFocus();
+        txtCorreo.requestFocus();
     }
 
     private void mostrarError(String mensaje) {

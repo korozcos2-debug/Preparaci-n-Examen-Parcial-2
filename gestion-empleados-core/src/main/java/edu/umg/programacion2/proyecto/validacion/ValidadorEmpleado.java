@@ -3,6 +3,7 @@ package edu.umg.programacion2.proyecto.validacion;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 import edu.umg.programacion2.proyecto.modelo.Empleado;
 
@@ -13,6 +14,7 @@ import edu.umg.programacion2.proyecto.modelo.Empleado;
 public class ValidadorEmpleado {
 
     private static final BigDecimal SALARIO_MAXIMO = new BigDecimal("99999999.99"); // límite de DECIMAL(10,2)
+    private static final Pattern PATRON_CORREO = Pattern.compile("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$");
 
     private ValidadorEmpleado() {
     }
@@ -21,6 +23,15 @@ public class ValidadorEmpleado {
     public static String validar(Empleado e) {
         if (e == null) {
             return "No hay datos del empleado.";
+        }
+        if (e.getCorreo() == null || e.getCorreo().trim().isEmpty()) {
+            return "El correo no puede estar vacío.";
+        }
+        if (e.getCorreo().trim().length() > 120) {
+            return "El correo no puede superar 120 caracteres.";
+        }
+        if (!PATRON_CORREO.matcher(e.getCorreo().trim()).matches()) {
+            return "El correo no tiene un formato válido.";
         }
         if (e.getNombre() == null || e.getNombre().trim().isEmpty()) {
             return "El nombre no puede estar vacío.";
