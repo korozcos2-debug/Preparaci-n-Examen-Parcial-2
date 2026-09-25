@@ -9,6 +9,7 @@ public class MainUI {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             VentanaPrincipal ventana = new VentanaPrincipal();
+            ventana.iniciar();
             ventana.setLocationRelativeTo(null);
             ventana.setVisible(true);
         });
